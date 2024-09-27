@@ -1,0 +1,36 @@
+<odoo>
+    <record id="view_crm_lead_form_custom" model="ir.ui.view">
+        <field name="name">crm.lead.form.custom</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_details']" position="inside">
+                <!-- Personal Details -->
+                <group string="Personal Details">
+                    <field name="date_of_birth"/>
+                    <field name="age" readonly="1"/>
+                    <field name="father_guardian"/>
+                    <field name="qualification"/>
+                    <field name="course"/>
+                </group>
+
+                <!-- Contact Information -->
+                <group string="Contact Information">
+                    <field name="permanent_address"/>
+                    <field name="city_town"/>
+                    <field name="state"/>
+                    <field name="district"/>
+                    <field name="mobile_alt"/>
+                </group>
+
+                <!-- Enrollment Details -->
+                <group string="Enrollment Details">
+                    <field name="enrollment_no"/>
+                    <field name="receipt_no"/>
+                    <field name="fees_paid"/>
+                    <field name="balance_due"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
