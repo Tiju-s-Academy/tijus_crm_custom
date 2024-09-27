@@ -4,31 +4,22 @@
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_lead_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='group_details']" position="inside">
-                <!-- Personal Details -->
-                <group string="Personal Details">
-                    <field name="date_of_birth"/>
-                    <field name="age" readonly="1"/>
-                    <field name="father_guardian"/>
-                    <field name="qualification"/>
-                    <field name="course"/>
-                </group>
-
-                <!-- Contact Information -->
-                <group string="Contact Information">
-                    <field name="permanent_address"/>
-                    <field name="city_town"/>
-                    <field name="state"/>
-                    <field name="district"/>
-                    <field name="mobile_alt"/>
-                </group>
-
-                <!-- Enrollment Details -->
-                <group string="Enrollment Details">
-                    <field name="enrollment_no"/>
-                    <field name="receipt_no"/>
-                    <field name="fees_paid"/>
-                    <field name="balance_due"/>
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <group>
+                    <field name="x_dob"/>
+                    <field name="x_age"/>
+                    <field name="x_father_guardian"/>
+                    <field name="x_qualification"/>
+                    <field name="x_course"/>
+                    <field name="x_permanent_address"/>
+                    <field name="x_city_town"/>
+                    <field name="x_state"/>
+                    <field name="x_district"/>
+                    <field name="x_mobile_alt"/>
+                    <field name="x_enrollment_no"/>
+                    <field name="x_receipt_no"/>
+                    <field name="x_fees_paid"/>
+                    <field name="x_balance_due"/>
                 </group>
             </xpath>
         </field>
