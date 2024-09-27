@@ -1,15 +1,11 @@
 {
-    'name': 'Custom CRM Lead Fields',
+    'name': 'Tijus CRM Custom',
     'version': '1.0',
-    'depends': ['crm', 'product'],
-    'category': 'CRM',
-    'description': """
-    Adds custom fields to CRM Lead model.
-    """,
-    'author': 'Muhammed Anas',
+    'category': 'Sales',
+    'summary': 'Custom fields for CRM Lead',
+    'depends': ['crm'],
     'data': [
         'views/crm_lead_views.xml',
     ],
-    'installable': True,
     'application': False,
 }
