@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='tag_ids']" position="after">
                 <group>
-                    <field name="x_dob"/>
+                    <field name="x_date_of_birth"/>
                     <field name="x_age"/>
                     <field name="x_father_guardian"/>
                     <field name="x_qualification"/>
@@ -16,8 +16,8 @@
                     <field name="x_state"/>
                     <field name="x_district"/>
                     <field name="x_mobile_alt"/>
-                    <field name="x_enrollment_no"/>
-                    <field name="x_receipt_no"/>
+                    <field name="x_enrollment_number"/>
+                    <field name="x_receipt_number"/>
                     <field name="x_fees_paid"/>
                     <field name="x_balance_due"/>
                 </group>
