@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='tag_ids']" position="after">
                 <group>
-                    <field name="x_date_of_birth"/>
+                    <!-- <field name="x_date_of_birth"/> -->
                     <field name="x_age"/>
                     <field name="x_father_guardian"/>
                     <field name="x_qualification"/>

@@ -3,7 +3,7 @@ from odoo import models, fields
 class CRMLead(models.Model):
     _inherit = 'crm.lead'
 
-    x_date_of_birth = fields.Char(string="Date of Birth")
+    # x_date_of_birth = fields.Char(string="Date of Birth")
     x_age = fields.Char(string="Age")
     x_father_guardian = fields.Char(string="Father/Guardian")
     x_qualification = fields.Char(string="Qualification")
