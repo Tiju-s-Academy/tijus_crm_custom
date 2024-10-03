@@ -21,6 +21,10 @@
                     <field name="x_fees_paid"/>
                     <field name="x_balance_due"/>
                 </group>
+                <group>
+                    <field name="x_mode_of_study" string="Mode of Study"/>
+                    <field name="x_whatsapp_number" string="WhatsApp Number"/>
+                </group>
             </xpath>
         </field>
     </record>

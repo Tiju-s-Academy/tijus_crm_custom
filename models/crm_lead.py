@@ -3,6 +3,15 @@ from odoo import models, fields
 class CRMLead(models.Model):
     _inherit = 'crm.lead'
 
+    # Selection field for Mode of Study
+    x_mode_of_study = fields.Selection([
+        ('offline', 'Offline'),
+        ('online', 'Online')
+    ], string="Mode of Study", default='offline')
+
+    # WhatsApp Number field
+    x_whatsapp_number = fields.Char(string="WhatsApp Number")
+
     x_date_of_birth = fields.Char(string="Date of Birth", store=True)
     x_age = fields.Char(string="Age", store=True)
     x_father_guardian = fields.Char(string="Father/Guardian", store=True)
