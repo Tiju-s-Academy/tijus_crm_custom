@@ -4,10 +4,7 @@ class CRMLead(models.Model):
     _inherit = 'crm.lead'
 
     # Selection field for Mode of Study
-    x_mode_of_study = fields.Selection([
-        ('offline', 'Offline'),
-        ('online', 'Online')
-    ], string="Mode of Study", default='offline')
+    x_mode_of_study = fields.Char(string="Mode of Study")
 
     # WhatsApp Number field
     x_whatsapp_number = fields.Char(string="WhatsApp Number")
