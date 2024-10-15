@@ -46,3 +46,22 @@ class CRMLead(models.Model):
         for lead in self:
             if lead.stage_id:
                 lead.probability = lead.stage_id.probability
+
+    # def _prepare_opportunity_quotation_context(self):
+    #     """ Prepares the context for a new quotation (sale.order) by sharing the values of common fields """
+    #     self.ensure_one()
+    #     quotation_context = {
+    #         'default_opportunity_id': self.id,
+    #         'default_partner_id': self.partner_id.id,
+    #         'default_campaign_id': self.campaign_id.id,
+    #         'default_medium_id': self.medium_id.id,
+    #         'default_origin': self.name,
+    #         'default_source_id': self.source_id.id,
+    #         'default_company_id': self.company_id.id or self.env.company.id,
+    #         'default_tag_ids': [(6, 0, self.tag_ids.ids)]
+    #     }
+    #     if self.team_id:
+    #         quotation_context['default_team_id'] = self.team_id.id
+    #     if self.user_id:
+    #         quotation_context['default_user_id'] = self.user_id.id
+    #     return quotation_context
