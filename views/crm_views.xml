@@ -20,6 +20,11 @@
                 <attribute name="invisible">type!='opportunity'</attribute>
             </xpath>
 
+
+            <xpath expr="//button[@name='action_sale_quotations_new']" position="attributes">
+                <attribute name="string">Confirm Sale</attribute>
+            </xpath>
+
             <xpath expr="//group[1]" position="inside">
 
                 <group>
