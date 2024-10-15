@@ -37,20 +37,67 @@
                     <field name="date_of_birth"/>
                     <field name="age"/>
                     <field name="father_guardian"/>
-                    <field name="qualification"/>
-                    <field name="course_id"/>
                 </group>
                 <group>
-                    <field name="city"/>
-                    <field name="country_id" invisible="1"/>
-                    <field name="state_id" domain="[('country_id','=',country_id)]"/>
-                    <field name="district"/>
-                    <field name="street"/>
-                    <field name="street2"/>
+                    <field name="qualification"/>
                     <field name="enrollment_number"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="mode_of_study" string="Mode of Study"/>
+                    <field name="course_id"/>
+
                 </group>
+            </xpath>
+
+            <!-- <xpath expr="//group[@name='lead_partner']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath> -->
+
+            <!-- <xpath expr="//group[@name='lead_info']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath> -->
+
+            <xpath expr="//group[@name='opportunity_partner']//field[@name='partner_id']" position="after">
+                <label for="street" string="Address"/>
+                <div class="o_address_format">
+                    <field name="street" placeholder="Street..." class="o_address_street"/>
+                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                    <field name="city" placeholder="City" class="o_address_city"/>
+                    <field name="state_id" class="o_address_state" placeholder="State" options="{&quot;no_open&quot;: True}"/>
+                    <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                    <field name="country_id" placeholder="Country" class="o_address_country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                </div>            
+            </xpath>
+
+            <xpath expr="//group[@name='lead_info']//label[@for='contact_name']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//group[@name='lead_info']//div[hasclass('o_row')]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='partner_name']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='email_cc']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='function']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//group[@name='lead_partner']//field[@name='country_id']" position="before">
+                <field name="district" placeholder="District"/>
+            </xpath>
+
+            <xpath expr="//field[@name='website']" position="attributes">
+                <attribute name="invisible">1</attribute>                
+            </xpath>
+
+            <xpath expr="//notebook//page[@name='lead']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//notebook//page[@name='extra']" position="attributes">
+                <attribute name="invisible">1</attribute>
             </xpath>
         </field>
     </record>
