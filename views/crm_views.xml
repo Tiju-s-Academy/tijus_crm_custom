@@ -24,6 +24,14 @@
                 <attribute name="invisible">type!='opportunity'</attribute>
             </xpath>
 
+            <xpath expr="//field[@name='probability']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='expected_revenue']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+
+
 
             <xpath expr="//button[@name='action_sale_quotations_new']" position="attributes">
                 <attribute name="invisible">1</attribute>
