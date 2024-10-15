@@ -17,6 +17,23 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
 
+            <xpath expr="//button[@name='action_view_sale_quotation']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_view_sale_order']" position="after">
+                <button class="oe_stat_button" type="object" name="action_view_invoice" icon="fa-pencil-square-o" invisible="type == 'lead' or invoice_count==0">
+                    <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                </button>
+            </xpath>
+
+
+            <xpath expr="//button[@name='action_set_won_rainbowman']" position="before">
+                <field name="sale_order_id" invisible="1"/>
+                <field name="invoice_status" invisible="1"/>
+                <button name="action_create_invoice" type="object" class="oe_highlight" string="Create Invoice" invisible="invoice_status!='to invoice' or not sale_order_id"/>                \
+                <button name="action_create_sale_order" string="Confirm Sale" type="object" class="btn-primary" title="Confirm Sale" invisible="not active or not partner_id or not course_id or sale_order_id or type == 'lead'"/>
+            </xpath>
+
             <xpath expr="//div[@id='probability']" position="attributes">
                 <attribute name="invisible">type!='opportunity'</attribute>
             </xpath>

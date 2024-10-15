@@ -1,5 +1,5 @@
-from odoo import models, fields, api
-
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 class CrmStage(models.Model):
     _inherit = "crm.stage"
     probability = fields.Float(string="Probability")
@@ -47,21 +47,61 @@ class CRMLead(models.Model):
             if lead.stage_id:
                 lead.probability = lead.stage_id.probability
 
-    # def _prepare_opportunity_quotation_context(self):
-    #     """ Prepares the context for a new quotation (sale.order) by sharing the values of common fields """
-    #     self.ensure_one()
-    #     quotation_context = {
-    #         'default_opportunity_id': self.id,
-    #         'default_partner_id': self.partner_id.id,
-    #         'default_campaign_id': self.campaign_id.id,
-    #         'default_medium_id': self.medium_id.id,
-    #         'default_origin': self.name,
-    #         'default_source_id': self.source_id.id,
-    #         'default_company_id': self.company_id.id or self.env.company.id,
-    #         'default_tag_ids': [(6, 0, self.tag_ids.ids)]
-    #     }
-    #     if self.team_id:
-    #         quotation_context['default_team_id'] = self.team_id.id
-    #     if self.user_id:
-    #         quotation_context['default_user_id'] = self.user_id.id
-    #     return quotation_context
+    invoice_status = fields.Selection(
+        selection=lambda self: self.env["sale.order"]._fields["invoice_status"].selection,
+        related="sale_order_id.invoice_status",
+        string="Invoice Status",
+        readonly=True, copy=False,
+        )
+    
+    sale_order_id = fields.Many2one('sale.order', string="Sale Order")
+
+    def action_create_sale_order(self):
+        if not self.partner_id:
+            raise ValidationError(f'You need to set a Customer before confirming the Sale!')
+        if not self.course_id:
+            raise ValidationError(f'You need to selecte a Course before confirming the Sale!')
+
+        sale_order_data = {
+            'opportunity_id': self.id,
+            'partner_id': self.partner_id.id,
+            'campaign_id': self.campaign_id.id,
+            'medium_id': self.medium_id.id,
+            'origin': self.name,
+            'source_id': self.source_id.id,
+            'company_id': self.company_id.id or self.env.company.id,
+            'tag_ids': [(6, 0, self.tag_ids.ids)],
+            'order_line': [
+                (0,0, {
+                    'product_id': self.course_id.id,
+                })
+                ]
+        }
+        if self.team_id:
+            sale_order_data['team_id'] = self.team_id.id
+        if self.user_id:
+            sale_order_data['user_id'] = self.user_id.id
+
+        sale_order = self.env['sale.order'].create(sale_order_data)
+        sale_order.action_confirm()
+        self.sale_order_id = sale_order.id
+
+    def action_create_invoice(self):
+        if self.sale_order_id:
+            return {
+                'name': _('Create Invoice'),
+                'res_model': 'sale.advance.payment.inv',
+                'view_mode': 'form',
+                'context': {
+                    'active_model': 'sale.order',
+                    'active_ids': [self.sale_order_id.id],
+                },
+                'target': 'new',
+                'type': 'ir.actions.act_window',
+            }
+    invoice_count = fields.Integer(related="sale_order_id.invoice_count")
+        
+    def action_view_invoice(self):
+        if self.sale_order_id:
+            if self.invoice_count > 0:
+                return self.sale_order_id.action_view_invoice()
