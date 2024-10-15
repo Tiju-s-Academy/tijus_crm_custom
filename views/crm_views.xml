@@ -39,11 +39,11 @@
                     <field name="father_guardian"/>
                 </group>
                 <group>
+                    <field name="course_id"/>
                     <field name="qualification"/>
                     <field name="enrollment_number"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="mode_of_study" string="Mode of Study"/>
-                    <field name="course_id"/>
 
                 </group>
             </xpath>
