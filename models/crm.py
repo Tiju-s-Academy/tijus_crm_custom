@@ -22,8 +22,8 @@ class CRMLead(models.Model):
     street2 = fields.Char(string="Address 2", related='partner_id.street2', store=True, readonly=False)
     city = fields.Char(string="City/Town", related='partner_id.city', store=True, readonly=False)
     district = fields.Char(string="District", store=True, readonly=False)
-    country_id = fields.Many2one('res.country',string="Country", related='partner_id.country_id', store=True, readonly=False)
-    state_id = fields.Many2one('res.country.state',string="State", related='partner_id.state_id', store=True, readonly=False)
+    country_id = fields.Many2one('res.country',string="Country", related='partner_id.country_id', store=True, readonly=False, default=lambda self: self.env.company.country_id.id)
+    state_id = fields.Many2one('res.country.state',string="State", related='partner_id.state_id', store=True, readonly=False, default=lambda self: self.env.company.state_id.id)
     mobile_alt = fields.Char(string="Mobile (Alt)", related='partner_id.mobile_alt', store=True, readonly=False)
 
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id.id)
