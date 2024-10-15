@@ -54,6 +54,7 @@ class CRMLead(models.Model):
         readonly=True, copy=False,
         )
     
+    is_won = fields.Boolean(related='stage_id.is_won')
     sale_order_id = fields.Many2one('sale.order', string="Sale Order")
 
     def action_create_sale_order(self):
