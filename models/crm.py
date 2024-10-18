@@ -29,12 +29,12 @@ class CRMLead(models.Model):
     state_id = fields.Many2one('res.country.state',string="State", related='partner_id.state_id', store=True, readonly=False, default=lambda self: self.env.company.state_id.id)
     mobile_alt = fields.Char(string="Mobile (Alt)", related='partner_id.mobile_alt', store=True, readonly=False)
 
-    aadhaar_no = fields.Char(string="Student Aadhaar No")
+    aadhaar_no = fields.Char(string="Student Aadhaar No", related='partner_id.aadhaar_no', store=True, readonly=False)
     # Bank Details
-    bank_account_name = fields.Char(string="Account Holder Name")
-    bank_account_no = fields.Char(string="Account No")
-    bank_ifsc_code = fields.Char(string="IFSC Code")
-    bank_name = fields.Char(string="Bank Name")
+    bank_account_name = fields.Char(string="Account Holder Name", related='partner_id.bank_account_name', store=True, readonly=False)
+    bank_account_no = fields.Char(string="Account No", related='partner_id.bank_account_no', store=True, readonly=False)
+    bank_ifsc_code = fields.Char(string="IFSC Code", related='partner_id.bank_ifsc_code', store=True, readonly=False)
+    bank_name = fields.Char(string="Bank Name", related='partner_id.bank_name', store=True, readonly=False)
     relation_with_bank_acc_holder = fields.Selection(
         selection=[('self', 'Self/Own'),('spouse', 'Spouse'),
             ('mother', 'Mother'),('father', 'Father'),('grand_father', 'Grand Father'),
@@ -43,9 +43,9 @@ class CRMLead(models.Model):
             ('sister', 'Sister'),('son', 'Son'),
             ('daughter', 'Daughter'),('other', 'Other (Specify)')
         ],
-        string="Relationship with Account Holder", default="self"
+        string="Relationship with Account Holder", default="self", related='partner_id.relation_with_bank_acc_holder', store=True, readonly=False
     )
-    relation_with_bank_acc_holder_manual = fields.Char(string="Specify Relation")
+    relation_with_bank_acc_holder_manual = fields.Char(string="Specify Relation", related='partner_id.relation_with_bank_acc_holder_manual', store=True, readonly=False)
 
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id.id)
     course_id = fields.Many2one('product.product', string="Course", )
