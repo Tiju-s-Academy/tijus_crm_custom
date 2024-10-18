@@ -64,17 +64,17 @@
 
                 <group>
                     <field name="mobile_alt"/>
-                    <field name="whatsapp_number" string="WhatsApp Number"/>
-                    <field name="date_of_birth"/>
+                    <field name="whatsapp_number" string="WhatsApp Number" required="1"/>
+                    <field name="date_of_birth" required="1"/>
                     <field name="age"/>
                     <field name="father_guardian"/>
                 </group>
                 <group>
-                    <field name="course_id"/>
-                    <field name="qualification"/>
+                    <field name="course_id" required="1"/>
+                    <field name="qualification" required="1"/>
                     <field name="enrollment_number"/>
                     <field name="currency_id" invisible="1"/>
-                    <field name="mode_of_study" string="Mode of Study"/>
+                    <field name="mode_of_study" string="Mode of Study" required="1"/>
                 </group>
             </xpath>
 
@@ -128,6 +128,22 @@
             </xpath>
             <xpath expr="//notebook//page[@name='extra']" position="attributes">
                 <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//group[@name='lead_info']//field[@name='email_from']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+            <xpath expr="//group[@name='opportunity_partner']//field[@name='email_from']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+            <xpath expr="//group[@name='lead_info']//field[@name='phone']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+            <xpath expr="//group[@name='opportunity_partner']//field[@name='phone']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_deadline']" position="attributes">
+                <attribute name="required">1</attribute>
             </xpath>
 
             <xpath expr="//page[@name='internal_notes']" position="before">
