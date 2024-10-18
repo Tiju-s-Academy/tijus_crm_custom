@@ -35,6 +35,11 @@
                 <button name="action_create_sale_order" string="Confirm Sale" type="object" class="btn-primary" title="Confirm Sale" invisible="not active or not partner_id or not course_id or not is_won or sale_order_id or type == 'lead'"/>
             </xpath>
 
+            <xpath expr="//widget[@name='web_ribbon']" position="before">
+                <field name="avatar_128" invisible="1"/>
+                <field name="image_1920" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;avatar_128&quot;}"/>
+            </xpath>
+
             <xpath expr="//div[@id='probability']" position="attributes">
                 <attribute name="invisible">type!='opportunity'</attribute>
             </xpath>
@@ -70,7 +75,6 @@
                     <field name="enrollment_number"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="mode_of_study" string="Mode of Study"/>
-
                 </group>
             </xpath>
 
@@ -124,6 +128,22 @@
             </xpath>
             <xpath expr="//notebook//page[@name='extra']" position="attributes">
                 <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//page[@name='internal_notes']" position="before">
+                <page string="Banking &amp; Other Details">
+                    <group>
+                        <group>
+                            <field name="aadhaar_no" />
+                            <field name="bank_account_name"/>
+                            <field name="bank_account_no"/>
+                            <field name="bank_ifsc_code"/>
+                            <field name="bank_name"/>
+                            <field name="relation_with_bank_acc_holder"/>
+                            <field name="relation_with_bank_acc_holder_manual" invisible="relation_with_bank_acc_holder!='other'"/>
+                        </group>
+                    </group>
+                </page>
             </xpath>
         </field>
     </record>

@@ -13,6 +13,9 @@ class CRMLead(models.Model):
         ('online', 'Online')
     ], string="Mode of Study", default='offline')
 
+    avatar_128 = fields.Binary(string="Avatar 128", related='partner_id.avatar_128', store=True, readonly=False)
+    image_1920 = fields.Binary(string="Image", related="partner_id.image_1920", store=True, readonly=False)
+
     whatsapp_number = fields.Char(string="WhatsApp Number", related="partner_id.whatsapp_number", store=True, readonly=False)
     date_of_birth = fields.Date(string="Date of Birth", related="partner_id.date_of_birth", store=True, readonly=False)
     age = fields.Integer(string="Age", related="partner_id.age", store=True, readonly=False)
@@ -25,6 +28,24 @@ class CRMLead(models.Model):
     country_id = fields.Many2one('res.country',string="Country", related='partner_id.country_id', store=True, readonly=False, default=lambda self: self.env.company.country_id.id)
     state_id = fields.Many2one('res.country.state',string="State", related='partner_id.state_id', store=True, readonly=False, default=lambda self: self.env.company.state_id.id)
     mobile_alt = fields.Char(string="Mobile (Alt)", related='partner_id.mobile_alt', store=True, readonly=False)
+
+    aadhaar_no = fields.Char(string="Student Aadhaar No")
+    # Bank Details
+    bank_account_name = fields.Char(string="Account Holder Name")
+    bank_account_no = fields.Char(string="Account No")
+    bank_ifsc_code = fields.Char(string="IFSC Code")
+    bank_name = fields.Char(string="Bank Name")
+    relation_with_bank_acc_holder = fields.Selection(
+        selection=[('self', 'Self/Own'),('spouse', 'Spouse'),
+            ('mother', 'Mother'),('father', 'Father'),('grand_father', 'Grand Father'),
+            ('grand_mother', 'Grand Mother'),('uncle', 'Uncle'),
+            ('aunt', 'Aunt'),('brother', 'Brother'),
+            ('sister', 'Sister'),('son', 'Son'),
+            ('daughter', 'Daughter'),('other', 'Other (Specify)')
+        ],
+        string="Relationship with Account Holder", default="self"
+    )
+    relation_with_bank_acc_holder_manual = fields.Char(string="Specify Relation")
 
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id.id)
     course_id = fields.Many2one('product.product', string="Course", )
@@ -63,6 +84,8 @@ class CRMLead(models.Model):
         if not self.course_id:
             raise ValidationError(f'You need to selecte a Course before confirming the Sale!')
 
+        if not self.aadhaar_no or not self.bank_account_name or not self.bank_account_no or not self.bank_ifsc_code or not self.bank_name or not self.relation_with_bank_acc_holder:
+            raise ValidationError(f'You have to fill the following fields before confirming Sale:\n Aadhaar No, Account Holder Name, Account No, IFSC Code, Bank Name, Relationship with Account Holder')
         sale_order_data = {
             'opportunity_id': self.id,
             'partner_id': self.partner_id.id,
