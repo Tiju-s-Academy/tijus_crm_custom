@@ -70,6 +70,7 @@
                     <field name="father_guardian"/>
                 </group>
                 <group>
+                    <field name="referred_by"/>
                     <field name="course_id" required="1"/>
                     <field name="qualification" required="1"/>
                     <field name="enrollment_number"/>
@@ -159,6 +160,26 @@
                             <field name="relation_with_bank_acc_holder_manual" invisible="relation_with_bank_acc_holder!='other'"/>
                         </group>
                     </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    
+    <record id="view_crm_team_form_custom" model="ir.ui.view">
+        <field name="name">crm.team.form.custom</field>
+        <field name="model">crm.team</field>
+        <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Queue Lines" invisible="0">
+                    <field name="queue_line_ids">
+                        <tree>
+                            <field name="salesperson_id"/>
+                            <field name="current_lead"/>
+                        </tree>
+                    </field>
+
                 </page>
             </xpath>
         </field>

@@ -53,6 +53,7 @@ class CRMLead(models.Model):
 
     expected_revenue = fields.Monetary(compute="_compute_expected_revenue", store=True, readonly=False)
     
+    referred_by = fields.Many2one('hr.employee', string="Referred By")
     @api.depends('course_id')
     def _compute_expected_revenue(self):
         for record in self:
@@ -129,3 +130,69 @@ class CRMLead(models.Model):
         if self.sale_order_id:
             if self.invoice_count > 0:
                 return self.sale_order_id.action_view_invoice()
+
+    @api.model_create_multi
+    def create(self, vals):
+        res = super().create(vals)
+        res.set_lead_queue()
+        return res
+    
+    def write(self, vals):
+        res = super().write(vals)
+        self.set_lead_queue()
+        return res
+
+    def set_lead_queue(self):
+        for record in self:
+            if record.team_id and record.type=='lead' and not record.user_id:
+                if record.team_id.queue_line_ids:
+                    all_users_assigned_lead = len(record.team_id.queue_line_ids.mapped('current_lead')) == len(record.team_id.queue_line_ids)
+                    if all_users_assigned_lead:
+                        record.team_id.queue_line_ids[0].write({'current_lead': record.id})
+                        record.write({'user_id': record.team_id.queue_line_ids[0].salesperson_id.id})
+                        for queue_line in record.team_id.queue_line_ids[1:]:
+                            queue_line.write({'current_lead': False})
+                    else:
+                        for queue_line in record.team_id.queue_line_ids:
+                            if not queue_line.current_lead:
+                                queue_line.write({'current_lead': record.id})
+                                record.write({'user_id': queue_line.salesperson_id.id})
+                                break
+
+            
+class CrmTeam(models.Model):
+    _inherit = "crm.team"
+    queue_line_ids = fields.One2many('crm.lead.queueing.line', 'team_id', store=True)
+
+    def create(self, vals):
+        res = super().create(vals)
+        self.set_queue_line_ids(res)
+        return res
+    
+    def write(self, vals):
+        res = super().write(vals)
+        self.set_queue_line_ids(self)
+        return res
+    
+    def set_queue_line_ids(self, recs):
+        for record in recs:
+            queue_line_users = record.queue_line_ids.mapped('salesperson_id.id')
+            for member in record.member_ids:
+                if member.id not in queue_line_users:
+                    self.env['crm.lead.queueing.line'].create({
+                        'salesperson_id': member.id,
+                        'current_lead': False,
+                        'team_id': record.id
+                    })
+
+    @api.model
+    def action_set_queue_line_ids_for_all_teams(self):
+        recs = self.env['crm.team'].search([])
+        self.set_queue_line_ids(recs)
+
+class CrmLeadQueueingLine(models.Model):
+    _name = "crm.lead.queueing.line"
+    salesperson_id = fields.Many2one('res.users', string="Salesperson")
+    current_lead = fields.Many2one('crm.lead', domain=[('type','=','lead')])
+    team_id = fields.Many2one('crm.team', check_company=True)
+    
