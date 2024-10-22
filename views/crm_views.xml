@@ -172,7 +172,7 @@
         <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
-                <page string="Queue Lines" invisible="0">
+                <page string="Queue Lines" invisible="1">
                     <field name="queue_line_ids">
                         <tree>
                             <field name="salesperson_id"/>
