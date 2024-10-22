@@ -147,6 +147,7 @@ class CRMLead(models.Model):
             if record.team_id and record.type=='lead' and not record.user_id:
                 if record.team_id.queue_line_ids:
                     all_users_assigned_lead = len(record.team_id.queue_line_ids.mapped('current_lead')) == len(record.team_id.queue_line_ids)
+                    # Reset current lead of all salespersons to False, to allow allocating new leads to them in next round
                     if all_users_assigned_lead:
                         record.team_id.queue_line_ids[0].write({'current_lead': record.id})
                         record.write({'user_id': record.team_id.queue_line_ids[0].salesperson_id.id})
@@ -154,6 +155,7 @@ class CRMLead(models.Model):
                             queue_line.write({'current_lead': False})
                     else:
                         for queue_line in record.team_id.queue_line_ids:
+                            # If not lead is assigned to this salesperson in current round
                             if not queue_line.current_lead:
                                 queue_line.write({'current_lead': record.id})
                                 record.write({'user_id': queue_line.salesperson_id.id})
@@ -178,12 +180,15 @@ class CrmTeam(models.Model):
         for record in recs:
             queue_line_users = record.queue_line_ids.mapped('salesperson_id.id')
             for member in record.member_ids:
+                # Create queue line for the new member
                 if member.id not in queue_line_users:
                     self.env['crm.lead.queueing.line'].create({
                         'salesperson_id': member.id,
                         'current_lead': False,
                         'team_id': record.id
                     })
+            # Remove queue lines for non existing members
+            record.queue_line_ids.filtered(lambda line: line.salesperson_id.id not in record.member_ids.ids).unlink()
 
     @api.model
     def action_set_queue_line_ids_for_all_teams(self):
