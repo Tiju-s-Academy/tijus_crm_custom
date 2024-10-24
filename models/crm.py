@@ -134,12 +134,12 @@ class CRMLead(models.Model):
     @api.model_create_multi
     def create(self, vals):
         res = super().create(vals)
-        res.set_lead_queue()
+        # res.set_lead_queue()
         return res
     
     def write(self, vals):
         res = super().write(vals)
-        self.set_lead_queue()
+        # self.set_lead_queue()
         return res
 
     def set_lead_queue(self):
