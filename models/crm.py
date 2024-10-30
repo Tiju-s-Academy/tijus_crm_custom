@@ -134,12 +134,13 @@ class CRMLead(models.Model):
     @api.model_create_multi
     def create(self, vals):
         res = super().create(vals)
-        # res.set_lead_queue()
+        for record in res:
+            record.set_lead_queue()
         return res
     
     def write(self, vals):
         res = super().write(vals)
-        # self.set_lead_queue()
+        self.set_lead_queue()
         return res
 
     def set_lead_queue(self):
@@ -155,7 +156,7 @@ class CRMLead(models.Model):
                             queue_line.write({'current_lead': False})
                     else:
                         for queue_line in record.team_id.queue_line_ids:
-                            # If not lead is assigned to this salesperson in current round
+                            # If no lead is assigned to this salesperson in current round
                             if not queue_line.current_lead:
                                 queue_line.write({'current_lead': record.id})
                                 record.write({'user_id': queue_line.salesperson_id.id})
