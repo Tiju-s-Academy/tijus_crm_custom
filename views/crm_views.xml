@@ -64,18 +64,18 @@
 
                 <group>
                     <field name="mobile_alt"/>
-                    <field name="whatsapp_number" string="WhatsApp Number" required="1"/>
-                    <field name="date_of_birth" required="1"/>
+                    <field name="whatsapp_number" string="WhatsApp Number" required="0"/>
+                    <field name="date_of_birth" required="0"/>
                     <field name="age"/>
                     <field name="father_guardian"/>
                 </group>
                 <group>
                     <field name="referred_by"/>
-                    <field name="course_id" required="1"/>
-                    <field name="qualification" required="1"/>
+                    <field name="course_id" required="0"/>
+                    <field name="qualification" required="0"/>
                     <field name="enrollment_number"/>
                     <field name="currency_id" invisible="1"/>
-                    <field name="mode_of_study" string="Mode of Study" required="1"/>
+                    <field name="mode_of_study" string="Mode of Study" required="0"/>
                 </group>
             </xpath>
 
@@ -131,7 +131,7 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
 
-            <xpath expr="//group[@name='lead_info']//field[@name='email_from']" position="attributes">
+            <!-- <xpath expr="//group[@name='lead_info']//field[@name='email_from']" position="attributes">
                 <attribute name="required">1</attribute>
             </xpath>
             <xpath expr="//group[@name='opportunity_partner']//field[@name='email_from']" position="attributes">
@@ -145,7 +145,7 @@
             </xpath>
             <xpath expr="//field[@name='date_deadline']" position="attributes">
                 <attribute name="required">1</attribute>
-            </xpath>
+            </xpath> -->
 
             <xpath expr="//page[@name='internal_notes']" position="before">
                 <page string="Banking &amp; Other Details">
