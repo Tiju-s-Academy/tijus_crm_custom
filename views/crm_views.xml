@@ -16,9 +16,11 @@
             
 
             <!-- Hide two 'Lost' buttons  -->
-            <xpath expr="//button[@name='%(crm.crm_lead_lost_action)d']" position="replace">
-            </xpath>
-            <xpath expr="//button[@name='%(crm.crm_lead_lost_action)d']" position="replace">
+            <xpath expr="//button[@name='%(crm.crm_lead_lost_action)d'][1]" position="attributes">
+                <attribute name="invisible">1</attribute>        
+             </xpath>
+            <xpath expr="//button[@name='%(crm.crm_lead_lost_action)d'][2]" position="attributes">
+                <attribute name="invisible">1</attribute>                 
             </xpath>
 
             <xpath expr="//button[@name='action_view_sale_quotation']" position="attributes">
