@@ -48,10 +48,10 @@ class CRMLead(models.Model):
     relation_with_bank_acc_holder_manual = fields.Char(string="Specify Relation", related='partner_id.relation_with_bank_acc_holder_manual', store=True, readonly=False)
 
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id.id)
-    course_id = fields.Many2one('product.product', string="Course", )
+    course_id = fields.Many2one('product.product', string="Course",required=True )
     enrollment_number = fields.Char(string="Enrollment No", )
 
-    expected_revenue = fields.Monetary(compute="_compute_expected_revenue", store=True, readonly=False)
+    expected_revenue = fields.Monetary(compute="_compute_expected_revenue", store=True, readonly=False, required=True)
     
     referred_by = fields.Many2one('hr.employee', string="Referred By")
     @api.depends('course_id')
