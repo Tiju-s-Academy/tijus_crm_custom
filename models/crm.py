@@ -137,12 +137,14 @@ class CRMLead(models.Model):
         for record in res:
             record.set_lead_queue()
             record._check_course_id_required()
+            record._check_source_id_required()
         return res
     
     def write(self, vals):
         res = super(CRMLead, self).write(vals)
         self.set_lead_queue()
         self._check_course_id_required()
+        self._check_source_id_required()
         return res
 
     def set_lead_queue(self):
@@ -174,6 +176,11 @@ class CRMLead(models.Model):
                     raise ValidationError(_('You need to select a Course when the lead is in stage: %s') % record.stage_id.name)
                 if not record.date_deadline:
                     raise ValidationError(_('You need to set a Deadline when the lead is in stage: %s') % record.stage_id.name)
+
+    def _check_source_id_required(self):
+        for record in self:
+            if not record.source_id:
+                raise ValidationError(_('You need to select a Source for the lead.'))
 
 class CrmTeam(models.Model):
     _inherit = "crm.team"

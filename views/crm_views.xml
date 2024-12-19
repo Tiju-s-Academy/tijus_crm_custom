@@ -168,6 +168,10 @@
                     </group>
                 </page>
             </xpath>
+
+            <xpath expr="//field[@name='source_id']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
         </field>
     </record>
 
