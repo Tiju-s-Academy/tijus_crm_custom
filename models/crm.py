@@ -48,7 +48,7 @@ class CRMLead(models.Model):
     relation_with_bank_acc_holder_manual = fields.Char(string="Specify Relation", related='partner_id.relation_with_bank_acc_holder_manual', store=True, readonly=False)
 
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id.id)
-    course_id = fields.Many2one('product.product', string="Course", )
+    course_id = fields.Many2one('product.product', string="Course", required=False)
     enrollment_number = fields.Char(string="Enrollment No", )
 
     expected_revenue = fields.Monetary(compute="_compute_expected_revenue", store=True, readonly=False, required=True)
@@ -133,14 +133,16 @@ class CRMLead(models.Model):
 
     @api.model_create_multi
     def create(self, vals):
-        res = super().create(vals)
+        res = super(CRMLead, self).create(vals)
         for record in res:
             record.set_lead_queue()
+            record._check_course_id_required()
         return res
     
     def write(self, vals):
-        res = super().write(vals)
+        res = super(CRMLead, self).write(vals)
         self.set_lead_queue()
+        self._check_course_id_required()
         return res
 
     def set_lead_queue(self):
@@ -162,7 +164,12 @@ class CRMLead(models.Model):
                                 record.write({'user_id': queue_line.salesperson_id.id})
                                 break
 
-            
+    def _check_course_id_required(self):
+        required_stages = ['Prospect (P)', 'Hot Prospect (HP)', 'Admission (A)']
+        for record in self:
+            if record.stage_id.name in required_stages and not record.course_id:
+                raise ValidationError(_('You need to select a Course when the lead is in stage: %s') % record.stage_id.name)
+
 class CrmTeam(models.Model):
     _inherit = "crm.team"
     queue_line_ids = fields.One2many('crm.lead.queueing.line', 'team_id', store=True)
@@ -201,4 +208,3 @@ class CrmLeadQueueingLine(models.Model):
     salesperson_id = fields.Many2one('res.users', string="Salesperson")
     current_lead = fields.Many2one('crm.lead', domain=[('type','=','lead')])
     team_id = fields.Many2one('crm.team', check_company=True)
-    
