@@ -164,11 +164,16 @@ class CRMLead(models.Model):
                                 record.write({'user_id': queue_line.salesperson_id.id})
                                 break
 
+    date_deadline = fields.Date(string="Deadline", required=False)
+
     def _check_course_id_required(self):
         required_stages = ['Prospect (P)', 'Hot Prospect (HP)', 'Admission (A)']
         for record in self:
-            if record.stage_id.name in required_stages and not record.course_id:
-                raise ValidationError(_('You need to select a Course when the lead is in stage: %s') % record.stage_id.name)
+            if record.stage_id.name in required_stages:
+                if not record.course_id:
+                    raise ValidationError(_('You need to select a Course when the lead is in stage: %s') % record.stage_id.name)
+                if not record.date_deadline:
+                    raise ValidationError(_('You need to set a Deadline when the lead is in stage: %s') % record.stage_id.name)
 
 class CrmTeam(models.Model):
     _inherit = "crm.team"
