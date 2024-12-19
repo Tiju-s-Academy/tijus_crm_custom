@@ -167,7 +167,7 @@ class CRMLead(models.Model):
     date_deadline = fields.Date(string="Deadline", required=False)
 
     def _check_course_id_required(self):
-        required_stages = ['Prospect (P)', 'Hot Prospect (HP)', 'Admission (A)']
+        required_stages = ['Prospect (P)', 'Hot Prospect (HP)']
         for record in self:
             if record.stage_id.name in required_stages:
                 if not record.course_id:
