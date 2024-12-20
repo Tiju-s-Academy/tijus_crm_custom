@@ -187,9 +187,8 @@ class CRMLead(models.Model):
             for record in res:
                 record.set_lead_queue()
                 if record.type == 'opportunity':
-                    # record._check_course_id_required()
-                    # record._check_source_id_required()
-                    pass
+                    record._check_course_id_required()
+                    record._check_source_id_required()
         return res
     
     def write(self, vals):
@@ -198,9 +197,8 @@ class CRMLead(models.Model):
             for record in self:
                 record.set_lead_queue()
                 if record.type == 'opportunity':
-                    # record._check_course_id_required()
-                    # record._check_source_id_required()
-                    pass
+                    record._check_course_id_required()
+                    record._check_source_id_required()
         return res
 
     def set_lead_queue(self):
