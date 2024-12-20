@@ -174,7 +174,7 @@ class CRMLead(models.Model):
             if record.stage_id.name in required_stages:
                 if not record.course_id:
                     raise ValidationError(_('You need to select a Course when the lead is in stage: %s') % record.stage_id.name)
-                if not record.date_deadline:
+                if not record.date_deadline and not self.env.context.get('importing_leads'):
                     raise ValidationError(_('You need to set a Deadline when the lead is in stage: %s') % record.stage_id.name)
 
     def _check_source_id_required(self):
