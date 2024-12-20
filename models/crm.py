@@ -137,16 +137,18 @@ class CRMLead(models.Model):
         if not self.env.context.get('importing_leads'):
             for record in res:
                 record.set_lead_queue()
-                record._check_course_id_required()
-                record._check_source_id_required()
+                if record.type == 'opportunity':
+                    record._check_course_id_required()
+                    record._check_source_id_required()
         return res
     
     def write(self, vals):
         res = super(CRMLead, self).write(vals)
         if not self.env.context.get('importing_leads'):
             self.set_lead_queue()
-            self._check_course_id_required()
-            self._check_source_id_required()
+            if self.type == 'opportunity':
+                self._check_course_id_required()
+                self._check_source_id_required()
         return res
 
     def set_lead_queue(self):
