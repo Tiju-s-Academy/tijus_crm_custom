@@ -134,17 +134,19 @@ class CRMLead(models.Model):
     @api.model_create_multi
     def create(self, vals):
         res = super(CRMLead, self).create(vals)
-        for record in res:
-            record.set_lead_queue()
-            record._check_course_id_required()
-            record._check_source_id_required()
+        if not self.env.context.get('importing_leads'):
+            for record in res:
+                record.set_lead_queue()
+                record._check_course_id_required()
+                record._check_source_id_required()
         return res
     
     def write(self, vals):
         res = super(CRMLead, self).write(vals)
-        self.set_lead_queue()
-        self._check_course_id_required()
-        self._check_source_id_required()
+        if not self.env.context.get('importing_leads'):
+            self.set_lead_queue()
+            self._check_course_id_required()
+            self._check_source_id_required()
         return res
 
     def set_lead_queue(self):
@@ -179,7 +181,7 @@ class CRMLead(models.Model):
 
     def _check_source_id_required(self):
         for record in self:
-            if not record.source_id:
+            if not record.source_id and not self.env.context.get('importing_leads'):
                 raise ValidationError(_('You need to select a Source for the lead.'))
 
 class CrmTeam(models.Model):
