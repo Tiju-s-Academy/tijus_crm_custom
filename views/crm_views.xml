@@ -257,6 +257,7 @@
                         <field name="city" string="City/Town"/>
                         <field name="referred_by" string="Referred By"/>
                         <field name="team_id" string="Sales Team"/>
+                        <field name="company_id" invisible="1"/>
                     </group>
                     <footer>
                         <button string="Import" type="object" name="action_import_lead" class="btn-primary"/>
