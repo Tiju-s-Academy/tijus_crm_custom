@@ -173,7 +173,7 @@ class CRMLead(models.Model):
     def _check_course_id_required(self):
         required_stages = ['Prospect (P)', 'Hot Prospect (HP)']
         for record in self:
-            if record.stage_id.name in required_stages:
+            if record.type == 'opportunity' and record.stage_id.name in required_stages:
                 if not record.course_id:
                     raise ValidationError(_('You need to select a Course when the lead is in stage: %s') % record.stage_id.name)
                 if not record.date_deadline and not self.env.context.get('importing_leads'):
@@ -181,7 +181,7 @@ class CRMLead(models.Model):
 
     def _check_source_id_required(self):
         for record in self:
-            if not record.source_id and not self.env.context.get('importing_leads'):
+            if record.type == 'opportunity' and not record.source_id and not self.env.context.get('importing_leads'):
                 raise ValidationError(_('You need to select a Source for the lead.'))
 
 class CrmTeam(models.Model):

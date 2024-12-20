@@ -47,10 +47,10 @@
             </xpath>
 
             <xpath expr="//div[@id='probability']" position="attributes">
-                <attribute name="invisible">type!='opportunity'</attribute>
+                <attribute name="invisible">type=='lead'</attribute>
             </xpath>
             <xpath expr="//label[@for='probability']" position="attributes">
-                <attribute name="invisible">type!='opportunity'</attribute>
+                <attribute name="invisible">type=='lead'</attribute>
             </xpath>
 
             <xpath expr="//field[@name='probability']" position="attributes">
