@@ -244,13 +244,25 @@
         <field name="model">crm.lead.import.wizard</field>
         <field name="arch" type="xml">
             <form string="Import Leads">
-                <group>
-                    <field name="csv_file" filename="csv_filename"/>
-                </group>
-                <footer>
-                    <button string="Import" type="object" name="action_import" class="btn-primary"/>
-                    <button string="Cancel" class="btn-secondary" special="cancel"/>
-                </footer>
+                <sheet>
+                    <group>
+                        <field name="name" string="Opportunity"/>
+                        <field name="partner_id" string="Customer"/>
+                        <field name="email_from" string="Email"/>
+                        <field name="phone" string="Phone"/>
+                        <field name="source_id" string="Source"/>
+                        <field name="course_id"/>
+                        <field name="date_deadline"/>
+                        <field name="city" string="City/Town"/>
+                        <field name="referred_by" string="Referred By"/>
+                        <field name="team_id" string="Sales Team"/>
+                        <field name="company_id" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button string="Import" type="object" name="action_import_lead" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
             </form>
         </field>
     </record>
