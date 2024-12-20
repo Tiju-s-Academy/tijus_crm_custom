@@ -1,5 +1,54 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+import base64
+import csv
+from io import StringIO
+
+class CrmLeadImportWizard(models.TransientModel):
+    _name = 'crm.lead.import.wizard'
+    _description = 'Import Leads Wizard'
+
+    csv_file = fields.Binary(string="CSV File", required=True)
+    csv_filename = fields.Char(string="CSV Filename")
+
+    def action_import(self):
+        if not self.csv_file:
+            raise ValidationError(_("Please upload a CSV file."))
+
+        csv_data = base64.b64decode(self.csv_file).decode('utf-8')
+        csv_reader = csv.DictReader(StringIO(csv_data))
+
+        required_columns = ["City/Town", "Customer", "Email", "Opportunity", "Phone", "Referred By", "Sales Team", "Source"]
+        for column in required_columns:
+            if column not in csv_reader.fieldnames:
+                raise ValidationError(_("The CSV file is missing the required column: %s") % column)
+
+        for row in csv_reader:
+            partner = self.env['res.partner'].search([('name', '=', row['Customer'])], limit=1)
+            if not partner:
+                partner = self.env['res.partner'].create({'name': row['Customer']})
+
+            team = self.env['crm.team'].search([('name', '=', row['Sales Team'])], limit=1)
+            source = self.env['utm.source'].search([('name', '=', row['Source'])], limit=1)
+            referred_by = self.env['hr.employee'].search([('name', '=', row['Referred By'])], limit=1)
+
+            self.env['crm.lead'].sudo().create({
+                'name': row['Opportunity'],
+                'partner_id': partner.id,
+                'email_from': row['Email'],
+                'phone': row['Phone'],
+                'city': row['City/Town'],
+                'source_id': source.id if source else False,
+                'team_id': team.id if team else False,
+                'referred_by': referred_by.id if referred_by else False,
+                'type': 'lead',
+            })
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
+
 class CrmStage(models.Model):
     _inherit = "crm.stage"
     probability = fields.Float(string="Probability")
