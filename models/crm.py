@@ -187,6 +187,19 @@ class CRMLead(models.Model):
             if record.type == 'opportunity' and not record.source_id and not self.env.context.get('importing_leads'):
                 raise ValidationError(_('You need to select a Source for the lead.'))
 
+    def action_import_lead(self):
+        # Logic to handle lead import
+        self.ensure_one()
+        if not self.source_id:
+            raise ValidationError(_('You need to select a Source for the lead.'))
+        if not self.date_deadline:
+            raise ValidationError(_('You need to set a Deadline for the lead.'))
+        # Additional import logic here
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
+
 class CrmTeam(models.Model):
     _inherit = "crm.team"
     queue_line_ids = fields.One2many('crm.lead.queueing.line', 'team_id', store=True)
