@@ -39,7 +39,7 @@
                 <field name="is_won" invisible="1"/>
                 <button name="action_create_invoice" type="object" class="oe_highlight" string="Create Invoice" invisible="invoice_status!='to invoice' or not sale_order_id"/>
                 <button name="action_create_sale_order" string="Confirm Sale" type="object" class="btn-primary" title="Confirm Sale" invisible="not active or not partner_id or not course_id or not is_won or sale_order_id or type == 'lead'"/>
-                <button name="action_change_expected_revenue" type="object" class="oe_highlight" string="Change Expected Revenue" invisible="!stage_id.is_won"/>
+                <button name="action_change_expected_revenue" type="object" class="oe_highlight" string="Change Expected Revenue" attrs="{'invisible': [('stage_id.is_won', '=', False)]}"/>
             </xpath>
 
             <xpath expr="//widget[@name='web_ribbon']" position="before">
