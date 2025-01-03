@@ -249,6 +249,33 @@ class CRMLead(models.Model):
             'tag': 'reload',
         }
 
+    def action_change_expected_revenue(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Change Expected Revenue',
+            'res_model': 'crm.lead.change.revenue.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_currency_id': self.currency_id.id},
+        }
+
+class CrmLeadChangeRevenueWizard(models.TransientModel):
+    _name = 'crm.lead.change.revenue.wizard'
+    _description = 'Change Expected Revenue Wizard'
+
+    new_expected_revenue = fields.Monetary(string="New Expected Revenue", required=True, currency_field='currency_id')
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.company.currency_id.id)
+
+    def action_change_revenue(self):
+        lead = self.env['crm.lead'].browse(self.env.context.get('active_id'))
+        lead.expected_revenue = self.new_expected_revenue
+        lead.activity_schedule(
+            'mail.mail_activity_data_todo',
+            date_deadline=fields.Date.today() + timedelta(days=7),
+            summary=_('Collect Pending Fee'),
+            note=_('Please collect the pending fee from the customer.')
+        )
+
 class CrmTeam(models.Model):
     _inherit = "crm.team"
     queue_line_ids = fields.One2many('crm.lead.queueing.line', 'team_id', store=True)
