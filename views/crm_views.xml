@@ -265,6 +265,7 @@
             <form string="Change Expected Revenue">
                 <group>
                     <field name="new_expected_revenue"/>
+                    <field name="next_collection_date"/>
                 </group>
                 <footer>
                     <button string="Change" type="object" name="action_change_revenue" class="btn-primary"/>
