@@ -304,11 +304,12 @@
         </field>
     </record>
 
-    <menuitem id="menu_crm_lead_collection" name="Collections" parent="crm.crm_menu_root" action="action_crm_lead_collection"/>
-
     <record id="action_crm_lead_collection" model="ir.actions.act_window">
         <field name="name">Collections</field>
         <field name="res_model">crm.lead.collection</field>
         <field name="view_mode">tree,form</field>
     </record>
+
+    <menuitem id="menu_crm_lead_collection" name="Collections" parent="crm.crm_menu_root" action="action_crm_lead_collection"/>
+
 </odoo>
