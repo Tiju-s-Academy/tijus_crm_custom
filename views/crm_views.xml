@@ -273,4 +273,42 @@
             </form>
         </field>
     </record>
+
+    <record id="view_crm_lead_collection_tree" model="ir.ui.view">
+        <field name="name">crm.lead.collection.tree</field>
+        <field name="model">crm.lead.collection</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="lead_id"/>
+                <field name="collection_date"/>
+                <field name="amount"/>
+                <field name="currency_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_crm_lead_collection_form" model="ir.ui.view">
+        <field name="name">crm.lead.collection.form</field>
+        <field name="model">crm.lead.collection</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="lead_id"/>
+                        <field name="collection_date"/>
+                        <field name="amount"/>
+                        <field name="currency_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <menuitem id="menu_crm_lead_collection" name="Collections" parent="crm.crm_menu_root" action="action_crm_lead_collection"/>
+
+    <record id="action_crm_lead_collection" model="ir.actions.act_window">
+        <field name="name">Collections</field>
+        <field name="res_model">crm.lead.collection</field>
+        <field name="view_mode">tree,form</field>
+    </record>
 </odoo>

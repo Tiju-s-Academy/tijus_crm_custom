@@ -266,16 +266,31 @@ class CrmLeadChangeRevenueWizard(models.TransientModel):
 
     new_expected_revenue = fields.Monetary(string="New Expected Revenue", required=True, currency_field='currency_id')
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.company.currency_id.id)
+    next_collection_date = fields.Date(string="Next Collection Date", required=True)
 
     def action_change_revenue(self):
         lead = self.env['crm.lead'].browse(self.env.context.get('active_id'))
         lead.expected_revenue = self.new_expected_revenue
         lead.activity_schedule(
             'mail.mail_activity_data_todo',
-            date_deadline=fields.Date.today() + timedelta(days=7),
+            date_deadline=self.next_collection_date,
             summary=_('Collect Pending Fee'),
             note=_('Please collect the pending fee from the customer.')
         )
+        self.env['crm.lead.collection'].create({
+            'lead_id': lead.id,
+            'collection_date': self.next_collection_date,
+            'amount': self.new_expected_revenue,
+        })
+
+class CrmLeadCollection(models.Model):
+    _name = 'crm.lead.collection'
+    _description = 'CRM Lead Collection'
+
+    lead_id = fields.Many2one('crm.lead', string="Lead", required=True)
+    collection_date = fields.Date(string="Collection Date", required=True)
+    amount = fields.Monetary(string="Amount", required=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.company.currency_id.id)
 
 class CrmTeam(models.Model):
     _inherit = "crm.team"
