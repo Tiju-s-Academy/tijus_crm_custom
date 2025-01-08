@@ -337,7 +337,8 @@ class CrmLeadCollectionEnterAmount(models.TransientModel):
     _description = 'Enter Collected Amount'
 
     collection_id = fields.Many2one('crm.lead.collection', string="Collection", required=True)
-    collected_amount = fields.Monetary(string="Collected Amount", required=True)
+    collected_amount = fields.Monetary(string="Collected Amount", required=True, currency_field='currency_id')
+    currency_id = fields.Many2one('res.currency', string='Currency', related='collection_id.currency_id', readonly=True)
 
     def action_confirm(self):
         self.collection_id.collected_amount += self.collected_amount
