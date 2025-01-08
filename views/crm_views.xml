@@ -84,6 +84,7 @@
                     <field name="enrollment_number"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="mode_of_study" string="Mode of Study" required="0"/>
+                    <field name="sales_objection"/>
                 </group>
             </xpath>
 
@@ -205,6 +206,11 @@
             <xpath expr="//kanban" position="attributes">
                 <attribute name="create">0</attribute>
             </xpath> 
+            <xpath expr="//div[hasclass('oe_kanban_content')]" position="inside">
+                <div t-if="record.sales_objection.raw_value" class="mt-2">
+                    <field name="sales_objection" widget="badge" decoration-danger="sales_objection == 'stall'" decoration-warning="sales_objection == 'fees'" decoration-info="sales_objection == 'need'" decoration-success="sales_objection == 'trust'"/>
+                </div>
+            </xpath>
         </field>
     </record>
 

@@ -276,6 +276,13 @@ class CRMLead(models.Model):
         else:
             raise ValidationError(_('No pending collections found for this lead.'))
 
+    sales_objection = fields.Selection([
+        ('trust', 'Trust'),
+        ('fees', 'Fees'),
+        ('need', 'Need'),
+        ('stall', 'Stall')
+    ], string="Sales Objection", tracking=True)
+
 class CrmLeadChangeRevenueWizard(models.TransientModel):
     _name = 'crm.lead.change.revenue.wizard'
     _description = 'Change Expected Revenue Wizard'
