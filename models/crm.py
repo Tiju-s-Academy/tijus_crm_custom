@@ -260,6 +260,22 @@ class CRMLead(models.Model):
             'context': {'default_currency_id': self.currency_id.id},
         }
 
+    def action_open_collection_form(self):
+        collection = self.env['crm.lead.collection'].search([('lead_id', '=', self.id), ('state', '=', 'pending')], limit=1)
+        if collection:
+            view_id = self.env.ref('tijus_crm_custom.view_crm_lead_collection_form').id
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Collect Payment',
+                'res_model': 'crm.lead.collection',
+                'view_mode': 'form',
+                'view_id': view_id,
+                'res_id': collection.id,
+                'target': 'new',
+            }
+        else:
+            raise ValidationError(_('No pending collections found for this lead.'))
+
 class CrmLeadChangeRevenueWizard(models.TransientModel):
     _name = 'crm.lead.change.revenue.wizard'
     _description = 'Change Expected Revenue Wizard'
@@ -291,6 +307,42 @@ class CrmLeadCollection(models.Model):
     collection_date = fields.Date(string="Collection Date", required=True)
     amount = fields.Monetary(string="Amount", required=True)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.company.currency_id.id)
+    collected_amount = fields.Monetary(string="Collected Amount", default=0.0)
+    balance = fields.Monetary(string="Balance", compute="_compute_balance", store=True)
+    state = fields.Selection([('pending', 'Pending'), ('collected', 'Collected')], string="State", default='pending')
+
+    @api.depends('amount', 'collected_amount')
+    def _compute_balance(self):
+        for record in self:
+            record.balance = record.amount - record.collected_amount
+            if record.balance <= 0:
+                record.state = 'collected'
+            else:
+                record.state = 'pending'
+
+    def action_enter_collected_amount(self):
+        view_id = self.env.ref('tijus_crm_custom.view_enter_collected_amount_form').id
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Enter Collected Amount',
+            'res_model': 'crm.lead.collection.enter.amount',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'target': 'new',
+            'context': {'default_collection_id': self.id},
+        }
+
+class CrmLeadCollectionEnterAmount(models.TransientModel):
+    _name = 'crm.lead.collection.enter.amount'
+    _description = 'Enter Collected Amount'
+
+    collection_id = fields.Many2one('crm.lead.collection', string="Collection", required=True)
+    collected_amount = fields.Monetary(string="Collected Amount", required=True)
+
+    def action_confirm(self):
+        self.collection_id.collected_amount += self.collected_amount
+        self.collection_id._compute_balance()
+        return {'type': 'ir.actions.act_window_close'}
 
 class CrmTeam(models.Model):
     _inherit = "crm.team"
