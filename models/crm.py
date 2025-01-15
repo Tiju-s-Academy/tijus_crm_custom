@@ -226,7 +226,7 @@ class CRMLead(models.Model):
     date_deadline = fields.Date(string="Deadline", required=False)
 
     def _check_course_id_required(self):
-        # Skip validation if importing leads
+        # Skip all validations if importing leads
         if self.env.context.get('importing_leads'):
             return
         required_stages = ['Prospect (P)', 'Hot Prospect (HP)']
