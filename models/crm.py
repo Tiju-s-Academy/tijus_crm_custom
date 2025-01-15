@@ -24,6 +24,8 @@ class CrmLeadImportWizard(models.TransientModel):
             if column not in csv_reader.fieldnames:
                 raise ValidationError(_("The CSV file is missing the required column: %s") % column)
 
+        # Use importing_leads context
+        ctx = {'importing_leads': True}
         for row in csv_reader:
             partner = self.env['res.partner'].search([('name', '=', row['Customer'])], limit=1)
             if not partner:
@@ -33,7 +35,7 @@ class CrmLeadImportWizard(models.TransientModel):
             source = self.env['utm.source'].search([('name', '=', row['Source'])], limit=1)
             referred_by = self.env['hr.employee'].search([('name', '=', row['Referred By'])], limit=1)
 
-            self.env['crm.lead'].sudo().create({
+            self.env['crm.lead'].with_context(ctx).sudo().create({
                 'name': row['Opportunity'],
                 'partner_id': partner.id,
                 'email_from': row['Email'],
