@@ -226,18 +226,23 @@ class CRMLead(models.Model):
     date_deadline = fields.Date(string="Deadline", required=False)
 
     def _check_course_id_required(self):
+        # Skip validation if importing leads
+        if self.env.context.get('importing_leads'):
+            return
         required_stages = ['Prospect (P)', 'Hot Prospect (HP)']
         for record in self:
             if record.type == 'opportunity' and record.stage_id.name in required_stages:
                 if not record.course_id:
                     raise ValidationError(_('You need to select a Course when the lead is in stage: %s') % record.stage_id.name)
-                # Temporarily commented out for imports
-                # if not record.date_deadline and not self.env.context.get('importing_leads'):
-                #     raise ValidationError(_('You need to set a Deadline when the lead is in stage: %s') % record.stage_id.name)
+                if not record.date_deadline:
+                    raise ValidationError(_('You need to set a Deadline when the lead is in stage: %s') % record.stage_id.name)
 
     def _check_source_id_required(self):
+        # Skip validation if importing leads
+        if self.env.context.get('importing_leads'):
+            return
         for record in self:
-            if record.type == 'opportunity' and not record.source_id and not self.env.context.get('importing_leads'):
+            if record.type == 'opportunity' and not record.source_id:
                 raise ValidationError(_('You need to select a Source for the lead.'))
 
     def action_import_lead(self):
