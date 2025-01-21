@@ -195,13 +195,17 @@ class CRMLead(models.Model):
         return res
     
     def write(self, vals):
+        # Add check for type change (lead to opportunity conversion)
+        converting_to_opportunity = vals.get('type') == 'opportunity'
         res = super(CRMLead, self).write(vals)
         if not self.env.context.get('importing_leads'):
             for record in self:
                 record.set_lead_queue()
-                if record.type == 'opportunity':
-                    record._check_course_id_required()
-                    record._check_source_id_required()
+                # Only check source and course if converting to opportunity or updating specific fields
+                if converting_to_opportunity or any(f in vals for f in ['stage_id', 'source_id', 'course_id']):
+                    if record.type == 'opportunity':
+                        record._check_course_id_required()
+                        record._check_source_id_required()
         return res
 
     def set_lead_queue(self):
@@ -242,8 +246,10 @@ class CRMLead(models.Model):
         if self.env.context.get('importing_leads'):
             return
         for record in self:
-            if record.type == 'opportunity' and not record.source_id:
-                raise ValidationError(_('You need to select a Source for the lead.'))
+            # Only validate if it's an opportunity and in a relevant stage
+            if record.type == 'opportunity' and record.stage_id.name not in ['Lost', 'Won']:
+                if not record.source_id:
+                    raise ValidationError(_('You need to select a Source for the lead.'))
 
     def action_import_lead(self):
         # Logic to handle lead import
