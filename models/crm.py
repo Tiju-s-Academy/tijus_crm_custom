@@ -98,11 +98,11 @@ class CRMLead(models.Model):
         string="Relationship with Account Holder", default="self", related='partner_id.relation_with_bank_acc_holder', store=True, readonly=False
     )
 
-    categ_id = fields.Many2one('product.category',string='Product Category',compute='_compute_category', store=True)
+    categ_id = fields.Many2one('product.category',string='Product Category',compute='_compute_category', store=True)
     @api.depends('course_id')
     def _compute_category(self):
         for rec in self:
-            rec.categ_id = rec.course_id.categ_id.id if rec.course_id else False
+            rec.categ_id = rec.course_id.categ_id.id if rec.course_id else False
     relation_with_bank_acc_holder_manual = fields.Char(string="Specify Relation", related='partner_id.relation_with_bank_acc_holder_manual', store=True, readonly=False)
 
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id.id)
