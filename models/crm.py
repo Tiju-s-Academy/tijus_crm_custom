@@ -240,12 +240,20 @@ class CRMLead(models.Model):
         if self.env.context.get('importing_leads'):
             return
         required_stages = ['Prospect (P)', 'Hot Prospect (HP)']
+        malayalee_required_stages = ['Neutral Prospect (NP)', 'Prospect (P)', 'Hot Prospect (HP)', 'Admission (A)']
+        
         for record in self:
-            if record.type == 'opportunity' and record.stage_id.name in required_stages:
-                if not record.course_id:
-                    raise ValidationError(_('You need to select a Course when the lead is in stage: %s') % record.stage_id.name)
-                if not record.date_deadline:
-                    raise ValidationError(_('You need to set a Deadline when the lead is in stage: %s') % record.stage_id.name)
+            if record.type == 'opportunity':
+                # Validate malayalee status for specific stages
+                if record.stage_id.name in malayalee_required_stages and not record.malayalee_status:
+                    raise ValidationError(_('You need to select Malayalee Status when the lead is in stage: %s') % record.stage_id.name)
+                
+                # Existing validations
+                if record.stage_id.name in required_stages:
+                    if not record.course_id:
+                        raise ValidationError(_('You need to select a Course when the lead is in stage: %s') % record.stage_id.name)
+                    if not record.date_deadline:
+                        raise ValidationError(_('You need to set a Deadline when the lead is in stage: %s') % record.stage_id.name)
 
     def _check_source_id_required(self):
         # Skip validation if importing leads
@@ -302,6 +310,11 @@ class CRMLead(models.Model):
         ('need', 'Need'),
         ('stall', 'Stall')
     ], string="Sales Objection", tracking=True)
+
+    malayalee_status = fields.Selection([
+        ('malayalee', 'Malayalee'),
+        ('non_malayalee', 'Non-Malayalee')
+    ], string="Malayalee Status", tracking=True)
 
 class CrmLeadChangeRevenueWizard(models.TransientModel):
     _name = 'crm.lead.change.revenue.wizard'
