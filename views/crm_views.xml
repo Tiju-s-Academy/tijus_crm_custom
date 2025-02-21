@@ -86,7 +86,7 @@
                     <field name="currency_id" invisible="1"/>
                     <field name="mode_of_study" string="Mode of Study" required="0"/>
                     <field name="sales_objection"/>
-                    <field name="malayalee_status" attrs="{'required': [('type', '=', 'opportunity')]}"/>
+                    <field name="malayalee_status" invisible="type != 'opportunity'"/>
                 </group>
             </xpath>
 
