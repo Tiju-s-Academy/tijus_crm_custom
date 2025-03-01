@@ -13,4 +13,7 @@ class CrmLeadDateClosed(models.Model):
         """Toggle editability of date_closed field"""
         self.ensure_one()
         self.date_closed_editable = not self.date_closed_editable
-        return True
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }

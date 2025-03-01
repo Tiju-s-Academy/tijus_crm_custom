@@ -8,7 +8,7 @@
             <field name="date_closed" position="replace">
                 <div class="o_row">
                     <field name="date_closed" 
-                           attrs="{'readonly': [('date_closed_editable', '=', False)]}"/>
+                           readonly="not date_closed_editable"/>
                     <button name="toggle_closed_date" 
                             type="object"
                             class="oe_link oe_inline"
