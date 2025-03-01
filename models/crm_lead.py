@@ -5,12 +5,13 @@ class CrmLead(models.Model):
     _inherit = 'crm.lead'
 
     date_closed_editable = fields.Boolean('Allow Editing Date Closed', default=False)
+    date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
 
     def set_date_closed_editable(self):
         """Method to toggle date_closed editability"""
         for record in self:
             record.date_closed_editable = not record.date_closed_editable
-        return {'type': 'ir.actions.client', 'tag': 'reload'}
+        return True
 
     def write(self, vals):
         # Override write to handle date_closed field editability
