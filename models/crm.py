@@ -316,6 +316,17 @@ class CRMLead(models.Model):
         ('non_malayalee', 'Non-Malayalee')
     ], string="Malayalee Status", tracking=True)
 
+    date_closed_editable = fields.Boolean('Allow Editing Date Closed', default=False)
+
+    def edit_date_closed(self):
+        """Toggle editability of date_closed field"""
+        self.ensure_one()
+        self.date_closed_editable = not self.date_closed_editable
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
+
 class CrmLeadChangeRevenueWizard(models.TransientModel):
     _name = 'crm.lead.change.revenue.wizard'
     _description = 'Change Expected Revenue Wizard'

@@ -10,7 +10,7 @@
                 <label for="date_closed"/>
                 <div class="o_row">
                     <field name="date_closed" readonly="not date_closed_editable"/>
-                    <button name="set_date_closed_editable" 
+                    <button name="edit_date_closed" 
                             type="object"
                             class="oe_edit_only oe_link"
                             string="✎"
