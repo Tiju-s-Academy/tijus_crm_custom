@@ -9,7 +9,8 @@ class CrmLead(models.Model):
         tracking=True
     )
 
-    def toggle_date_closed_edit(self):
+    def action_toggle_date_closed_edit(self):
         """Toggle editability of date_closed field"""
         for record in self:
-            record.date_closed_editable = not record.date_closed_editable
+            record.write({'date_closed_editable': not record.date_closed_editable})
+        return True
