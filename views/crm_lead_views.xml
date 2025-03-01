@@ -6,15 +6,14 @@
         <field name="inherit_id" ref="crm.crm_lead_view_form"/>
         <field name="arch" type="xml">
             <field name="date_closed" position="replace">
-                <label for="date_closed"/>
                 <div class="o_row">
                     <field name="date_closed" 
                            attrs="{'readonly': [('date_closed_editable', '=', False)]}"/>
-                    <button name="toggle_date_closed" 
+                    <button name="toggle_date_edit" 
                             type="object"
-                            icon="fa-pencil"
-                            class="oe_edit_only"
-                            attrs="{'invisible': [('date_closed_editable', '=', True)]}"/>
+                            string="✎"
+                            class="oe_edit_only oe_link"
+                            title="Toggle Edit Mode"/>
                     <field name="date_closed_editable" invisible="1"/>
                 </div>
             </field>
