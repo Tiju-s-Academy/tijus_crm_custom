@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_lead_view_form_inherit" model="ir.ui.view">
+        <field name="name">crm.lead.view.form.inherit</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_closed']" position="before">
+                <button name="toggle_date_closed_edit" 
+                        type="object" 
+                        string="Edit Date Closed" 
+                        class="oe_inline btn btn-secondary"
+                        attrs="{'invisible': [('date_closed_editable', '=', True)]}"/>
+                <button name="toggle_date_closed_edit" 
+                        type="object" 
+                        string="Lock Date Closed" 
+                        class="oe_inline btn btn-secondary"
+                        attrs="{'invisible': [('date_closed_editable', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='date_closed']" position="attributes">
+                <attribute name="attrs">{'readonly': [('date_closed_editable', '=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_closed']" position="after">
+                <field name="date_closed_editable" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

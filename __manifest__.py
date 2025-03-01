@@ -10,6 +10,7 @@
         'data/functions.xml',
         'views/res_partner.xml',
         'views/crm_views.xml',
+        'views/crm_lead_views.xml',
     ],
     'application': False,
 }
