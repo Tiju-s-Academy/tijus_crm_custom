@@ -5,24 +5,23 @@
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_lead_view_form"/>
         <field name="arch" type="xml">
-            <field name="date_closed" position="before">
-                <button name="toggle_date_closed_edit" 
-                        type="object" 
-                        string="Edit Date Closed" 
-                        class="oe_inline btn btn-secondary"
-                        attrs="{'invisible': [('date_closed_editable', '=', True)]}"/>
-                <button name="toggle_date_closed_edit" 
-                        type="object" 
-                        string="Lock Date Closed" 
-                        class="oe_inline btn btn-secondary"
-                        attrs="{'invisible': [('date_closed_editable', '=', False)]}"/>
-            </field>
-            <field name="date_closed" position="attributes">
-                <attribute name="attrs">{'readonly': [('date_closed_editable', '=', False)]}</attribute>
-            </field>
-            <field name="date_closed" position="after">
-                <field name="date_closed_editable" invisible="1"/>
-            </field>
+            <xpath expr="//field[@name='date_closed']" position="replace">
+                <label for="date_closed"/>
+                <div class="o_row">
+                    <button name="toggle_date_closed_edit" 
+                            type="object" 
+                            string="Edit" 
+                            class="oe_link"
+                            attrs="{'invisible': [('date_closed_editable', '=', True)]}"/>
+                    <button name="toggle_date_closed_edit" 
+                            type="object" 
+                            string="Lock" 
+                            class="oe_link"
+                            attrs="{'invisible': [('date_closed_editable', '=', False)]}"/>
+                    <field name="date_closed" attrs="{'readonly': [('date_closed_editable', '=', False)]}"/>
+                    <field name="date_closed_editable" invisible="1"/>
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>
