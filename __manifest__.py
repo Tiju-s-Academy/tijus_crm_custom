@@ -13,7 +13,8 @@
     'data': [
         'security/ir.model.access.csv',
         'security/record_rules.xml',
-        'views/res_partner.xml',  # Add this line
+        'views/res_partner.xml',
+        'models/crm_lead.py',  # Add this line
         'views/crm_lead_views.xml',
         'views/crm_views.xml',
     ],
