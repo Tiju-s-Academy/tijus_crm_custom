@@ -8,12 +8,11 @@
             <xpath expr="//field[@name='website']" position="before">
                 <field name="whatsapp_number" widget="phone"/>
                 <field name="mobile_alt" widget="phone"/>
-
             </xpath>
             <xpath expr="//field[@name='vat']" position="before">
                 <field name="district"/>
             </xpath>
-            <xpath expr="//group[1]//group[1]" position='inside'>
+            <xpath expr="//group[@name='address']//field[@name='street']" position="before">
                 <field name="date_of_birth"/>
                 <field name="age"/>
                 <field name="father_guardian"/>
