@@ -12,7 +12,8 @@
             <xpath expr="//field[@name='vat']" position="before">
                 <field name="district"/>
             </xpath>
-            <xpath expr="//group[@name='address']//field[@name='street']" position="before">
+            <!-- Changed the xpath to target a more reliable element -->
+            <xpath expr="//group[1]/group[1]" position="inside">
                 <field name="date_of_birth"/>
                 <field name="age"/>
                 <field name="father_guardian"/>
