@@ -9,10 +9,10 @@
                 <div class="o_row">
                     <field name="date_closed" 
                            attrs="{'readonly': [('date_closed_editable', '=', False)]}"/>
-                    <button name="action_toggle_date_closed" 
+                    <button name="toggle_edit_mode" 
                             type="object"
-                            string="✎"
-                            class="oe_link"
+                            icon="fa-pencil"
+                            class="oe_edit_only"
                             title="Toggle Edit Mode"/>
                     <field name="date_closed_editable" invisible="1"/>
                 </div>

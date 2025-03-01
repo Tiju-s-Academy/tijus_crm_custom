@@ -9,10 +9,10 @@ class CrmLead(models.Model):
         copy=False
     )
 
-    def action_toggle_date_closed(self):
-        """Toggle editability of date_closed field"""
-        for record in self:
-            record.date_closed_editable = not record.date_closed_editable
+    def toggle_edit_mode(self):
+        """Toggle the editability of date_closed field"""
+        self.ensure_one()
+        self.date_closed_editable = not self.date_closed_editable
         return True
 
     def write(self, vals):
@@ -28,14 +28,3 @@ class CrmLead(models.Model):
         if 'date_closed' in res:
             res['date_closed']['readonly'] = False
         return res
-
-    def toggle_date_edit(self):
-        """Enable/disable date_closed field editability"""
-        self.ensure_one()
-        self.write({
-            'date_closed_editable': not self.date_closed_editable
-        })
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'reload',
-        }
