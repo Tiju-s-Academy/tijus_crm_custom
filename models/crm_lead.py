@@ -9,11 +9,14 @@ class CrmLead(models.Model):
         copy=False
     )
 
-    def toggle_edit_mode(self):
-        """Toggle the editability of date_closed field"""
+    def action_edit_mode(self):
+        """Toggle editability of date_closed field"""
         self.ensure_one()
         self.date_closed_editable = not self.date_closed_editable
-        return True
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
 
     def write(self, vals):
         # Override write to handle date_closed field editability
