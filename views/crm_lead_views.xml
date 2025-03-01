@@ -5,17 +5,22 @@
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_lead_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='date_closed']" position="replace">
-                <div class="o_row">
-                    <field name="date_closed" readonly="not date_closed_editable"/>
-                    <button name="toggle_date_closed_edit" 
-                            type="object"
-                            class="btn btn-link"
-                            title="Toggle Edit Mode"
-                            icon="fa-pencil"/>
-                    <field name="date_closed_editable" invisible="1"/>
-                </div>
-            </xpath>
+            <field name="date_closed" position="attributes">
+                <attribute name="attrs">{'readonly': [('date_closed_editable', '=', False)]}</attribute>
+            </field>
+            <field name="date_closed" position="after">
+                <button name="toggle_date_closed_edit" 
+                        type="object"
+                        string="Edit"
+                        class="oe_link oe_inline"
+                        attrs="{'invisible': [('date_closed_editable', '=', True)]}"/>
+                <button name="toggle_date_closed_edit" 
+                        type="object"
+                        string="Lock"
+                        class="oe_link oe_inline"
+                        attrs="{'invisible': [('date_closed_editable', '=', False)]}"/>
+                <field name="date_closed_editable" invisible="1"/>
+            </field>
         </field>
     </record>
 </odoo>
