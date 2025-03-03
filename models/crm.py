@@ -59,6 +59,14 @@ class CrmStage(models.Model):
 class CRMLead(models.Model):
     _inherit = 'crm.lead'
 
+    date_closed = fields.Datetime(
+        string='Closed Date',
+        tracking=True,
+        readonly=False,
+        copy=False,
+        help="Date this lead/opportunity was closed."
+    )
+
     # Selection field for Mode of Study
     mode_of_study = fields.Selection([
         ('offline', 'Offline'),
