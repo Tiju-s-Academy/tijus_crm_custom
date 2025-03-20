@@ -209,6 +209,28 @@ class CRMLead(models.Model):
         return res
     
     def write(self, vals):
+        # Store old user_id before write
+        old_user_ids = {record.id: record.user_id.id for record in self}
+        
+        res = super(CRMLead, self).write(vals)
+        
+        # If user_id (salesperson) changed, reassign pending activities
+        if 'user_id' in vals:
+            for record in self:
+                old_user_id = old_user_ids[record.id]
+                new_user_id = vals['user_id']
+                if old_user_id != new_user_id:
+                    # Get all pending activities for this lead
+                    activities = self.env['mail.activity'].search([
+                        ('res_id', '=', record.id),
+                        ('res_model', '=', 'crm.lead'),
+                        ('user_id', '=', old_user_id),
+                        ('state', '!=', 'done')
+                    ])
+                    # Reassign activities to new user
+                    if activities:
+                        activities.write({'user_id': new_user_id})
+        
         # Add check for type change (lead to opportunity conversion)
         converting_to_opportunity = vals.get('type') == 'opportunity'
         res = super(CRMLead, self).write(vals)
