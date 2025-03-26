@@ -366,12 +366,18 @@ class CRMLead(models.Model):
         if msg_dict.get('body'):
             body = msg_dict['body']
             
-            # Extract fields using regular expressions
+            # Clean HTML tags and convert <br> to newlines
             import re
+            from html import unescape
             
-            # Extract name
-            first_name = re.search(r'First Name: (.+?)(?:\n|$)', body)
-            last_name = re.search(r'Last Name: (.+?)(?:\n|$)', body)
+            # Remove HTML tags but keep the content
+            body = re.sub(r'<[^>]+>', '\n', body)
+            body = unescape(body)  # Convert HTML entities
+            body = re.sub(r'\n+', '\n', body)  # Remove multiple newlines
+            
+            # Extract fields using regular expressions
+            first_name = re.search(r'First Name:\s*([^\n]+)', body)
+            last_name = re.search(r'Last Name:\s*([^\n]+)', body)
             name = ''
             if first_name:
                 name += first_name.group(1).strip()
@@ -379,10 +385,10 @@ class CRMLead(models.Model):
                 name += ' ' + last_name.group(1).strip()
             
             # Extract other fields
-            email = re.search(r'Email: (.+?)(?:\n|$)', body)
-            phone = re.search(r'Phone Number : (.+?)(?:\n|$)', body)
-            whatsapp = re.search(r'Whatsapp Number : (.+?)(?:\n|$)', body)
-            course_mode = re.search(r'Course Mode : (.+?)(?:\n|$)', body)
+            email = re.search(r'Email:\s*([^\n]+)', body)
+            phone = re.search(r'Phone Number\s*:\s*([^\n]+)', body)
+            whatsapp = re.search(r'Whatsapp Number\s*:\s*([^\n]+)', body)
+            course_mode = re.search(r'Course Mode\s*:\s*([^\n]+)', body)
             
             # Update custom values with extracted information
             if name:
