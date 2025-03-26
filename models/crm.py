@@ -357,6 +357,65 @@ class CRMLead(models.Model):
             'tag': 'reload',
         }
 
+    @api.model
+    def message_new(self, msg_dict, custom_values=None):
+        if custom_values is None:
+            custom_values = {}
+        
+        # Extract information from the message body
+        if msg_dict.get('body'):
+            body = msg_dict['body']
+            
+            # Extract fields using regular expressions
+            import re
+            
+            # Extract name
+            first_name = re.search(r'First Name: (.+?)(?:\n|$)', body)
+            last_name = re.search(r'Last Name: (.+?)(?:\n|$)', body)
+            name = ''
+            if first_name:
+                name += first_name.group(1).strip()
+            if last_name:
+                name += ' ' + last_name.group(1).strip()
+            
+            # Extract other fields
+            email = re.search(r'Email: (.+?)(?:\n|$)', body)
+            phone = re.search(r'Phone Number : (.+?)(?:\n|$)', body)
+            whatsapp = re.search(r'Whatsapp Number : (.+?)(?:\n|$)', body)
+            course_mode = re.search(r'Course Mode : (.+?)(?:\n|$)', body)
+            
+            # Update custom values with extracted information
+            if name:
+                custom_values['name'] = name.strip()
+                # Create or update partner
+                partner_vals = {
+                    'name': name.strip(),
+                    'email': email.group(1).strip() if email else False,
+                    'phone': phone.group(1).strip() if phone else False,
+                    'whatsapp_number': whatsapp.group(1).strip() if whatsapp else False,
+                }
+                partner = self.env['res.partner'].create(partner_vals)
+                custom_values['partner_id'] = partner.id
+            
+            if email:
+                custom_values['email_from'] = email.group(1).strip()
+            if phone:
+                custom_values['phone'] = phone.group(1).strip()
+            if course_mode:
+                mode = course_mode.group(1).strip().lower()
+                custom_values['mode_of_study'] = 'online' if 'online' in mode else 'offline'
+            
+            # Set source as Google Ads
+            google_ads_source = self.env['utm.source'].search([('name', '=', 'Google Ads')], limit=1)
+            if not google_ads_source:
+                google_ads_source = self.env['utm.source'].create({'name': 'Google Ads'})
+            custom_values['source_id'] = google_ads_source.id
+            
+            # Set type as lead
+            custom_values['type'] = 'lead'
+        
+        return super(CRMLead, self).message_new(msg_dict, custom_values)
+
 class CrmLeadChangeRevenueWizard(models.TransientModel):
     _name = 'crm.lead.change.revenue.wizard'
     _description = 'Change Expected Revenue Wizard'
