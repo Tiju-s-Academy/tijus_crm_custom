@@ -375,20 +375,37 @@ class CRMLead(models.Model):
             body = unescape(body)  # Convert HTML entities
             body = re.sub(r'\n+', '\n', body)  # Remove multiple newlines
             
-            # Extract fields using regular expressions
-            first_name = re.search(r'First Name:\s*([^\n]+)', body)
-            last_name = re.search(r'Last Name:\s*([^\n]+)', body)
-            name = ''
-            if first_name:
-                name += first_name.group(1).strip()
-            if last_name:
-                name += ' ' + last_name.group(1).strip()
-            
-            # Extract other fields
-            email = re.search(r'Email:\s*([^\n]+)', body)
-            phone = re.search(r'Phone Number\s*:\s*([^\n]+)', body)
-            whatsapp = re.search(r'Whatsapp Number\s*:\s*([^\n]+)', body)
-            course_mode = re.search(r'Course Mode\s*:\s*([^\n]+)', body)
+            # Try to detect the format (detailed form vs simple form)
+            if 'First Name:' in body:
+                # Detailed form format
+                first_name = re.search(r'First Name:\s*([^\n]+)', body)
+                last_name = re.search(r'Last Name:\s*([^\n]+)', body)
+                name = ''
+                if first_name:
+                    name += first_name.group(1).strip()
+                if last_name:
+                    name += ' ' + last_name.group(1).strip()
+                
+                email = re.search(r'Email:\s*([^\n]+)', body)
+                phone = re.search(r'Phone Number\s*:\s*([^\n]+)', body)
+                whatsapp = re.search(r'Whatsapp Number\s*:\s*([^\n]+)', body)
+                course_mode = re.search(r'Course Mode\s*:\s*([^\n]+)', body)
+            else:
+                # Simple form format
+                lines = body.strip().split('\n')
+                name = lines[0].strip() if lines else ''
+                # Try to find phone number in the next few lines
+                phone_match = None
+                for line in lines[1:4]:  # Check first few lines
+                    # Match common phone number formats
+                    if re.match(r'^\+?[0-9]{10,}$', line.strip()):
+                        phone_match = line.strip()
+                        break
+                
+                phone = type('MockMatch', (), {'group': lambda x: phone_match}) if phone_match else None
+                email = None
+                whatsapp = None
+                course_mode = None
             
             # Update custom values with extracted information
             if name:
@@ -406,7 +423,7 @@ class CRMLead(models.Model):
             if email:
                 custom_values['email_from'] = email.group(1).strip()
             if phone:
-                custom_values['phone'] = phone.group(1).strip()
+                custom_values['phone'] = phone.group(1) if hasattr(phone, 'group') else phone
             if course_mode:
                 mode = course_mode.group(1).strip().lower()
                 custom_values['mode_of_study'] = 'online' if 'online' in mode else 'offline'
