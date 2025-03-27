@@ -293,7 +293,11 @@ class CRMLead(models.Model):
             # Only validate if it's an opportunity and in a relevant stage
             if record.type == 'opportunity' and record.stage_id.name not in ['Lost', 'Won']:
                 if not record.source_id:
-                    raise ValidationError(_('You need to select a Source for the lead.'))
+                    # Set a default source if missing
+                    default_source = self.env['utm.source'].search([('name', '=', 'Unknown')], limit=1)
+                    if not default_source:
+                        default_source = self.env['utm.source'].create({'name': 'Unknown'})
+                    record.source_id = default_source
 
     def action_import_lead(self):
         # Logic to handle lead import
