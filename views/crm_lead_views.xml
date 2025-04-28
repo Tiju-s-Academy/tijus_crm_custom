@@ -17,6 +17,8 @@
                             title="Toggle Edit Mode"/>
                     <field name="date_closed_editable" invisible="1"/>
                 </div>
+                <field name="call_status"/>
+                <field name="call_remark"/>
             </xpath>
             <field name="date_deadline" position="after">
             </field>

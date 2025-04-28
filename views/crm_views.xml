@@ -88,6 +88,22 @@
                     <field name="sales_objection"/>
                     <field name="malayalee_status" invisible="type != 'opportunity'"/>
                 </group>
+                <group>
+                    <field name="call_status"/>
+                    <field name="call_remark"/>
+                </group>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Call Followups">
+                    <field name="call_followup_ids">
+                        <tree editable="bottom">
+                            <field name="status"/>
+                            <field name="remark"/>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                        </tree>
+                    </field>
+                </page>
             </xpath>
 
             <!-- <xpath expr="//group[@name='lead_partner']" position="attributes">

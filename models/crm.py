@@ -572,3 +572,29 @@ class CrmLeadQueueingLine(models.Model):
     salesperson_id = fields.Many2one('res.users', string="Salesperson")
     current_lead = fields.Many2one('crm.lead', domain=[('type','=','lead')])
     team_id = fields.Many2one('crm.team', check_company=True)
+
+class CrmLeadCallFollowup(models.Model):
+    _name = 'crm.lead.call.followup'
+    _description = 'CRM Lead Call Followup'
+
+    lead_id = fields.Many2one('crm.lead', string="Lead", required=True, ondelete='cascade')
+    status = fields.Selection(
+        [
+            ('1st_call', '1st Call'),
+            ('followup_1', 'Followup 1'),
+            ('followup_2', 'Followup 2'),
+            ('followup_3', 'Followup 3'),
+            ('followup_4', 'Followup 4'),
+            ('followup_5', 'Followup 5'),
+            ('followup_6', 'Followup 6'),
+            ('followup_7', 'Followup 7'),
+            ('followup_8', 'Followup 8'),
+            ('followup_9', 'Followup 9'),
+            ('followup_10', 'Followup 10'),
+        ],
+        string="Call Status",
+        required=True
+    )
+    remark = fields.Text(string="Remark")
+    date = fields.Datetime(string="Date", default=fields.Datetime.now)
+    user_id = fields.Many2one('res.users', string="User", default=lambda self: self.env.user)

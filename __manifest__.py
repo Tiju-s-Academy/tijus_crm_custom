@@ -16,6 +16,7 @@
         'views/crm_lead_views.xml',
         'views/res_partner.xml',
         'views/crm_views.xml',
+        'views/tijus_crm_custom_views.xml',  # Add a line for the new model's access if needed
     ],
     'installable': True,
     'application': False,
