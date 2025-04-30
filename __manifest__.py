@@ -13,6 +13,7 @@
     'data': [
         'security/ir.model.access.csv',
         'security/record_rules.xml',
+        'data/activity_type.xml',  # Added the new activity type data file
         'views/crm_lead_views.xml',
         'views/res_partner.xml',
         'views/crm_views.xml',

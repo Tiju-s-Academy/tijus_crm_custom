@@ -68,6 +68,10 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
 
+            <xpath expr="//group[@name='opportunity_partner']//field[@name='phone']" position="after">
+                <field name="possible_country" readonly="1"/>
+            </xpath>
+            
             <xpath expr="//group[1]" position="inside">
 
                 <group>
@@ -228,6 +232,13 @@
                 <div t-if="record.sales_objection.raw_value" class="mt-2">
                     <field name="sales_objection" widget="badge" decoration-danger="sales_objection == 'stall'" decoration-warning="sales_objection == 'fees'" decoration-info="sales_objection == 'need'" decoration-success="sales_objection == 'trust'"/>
                 </div>
+            </xpath>
+            
+            <!-- Add country flag to the kanban card -->
+            <xpath expr="//div[hasclass('oe_kanban_content')]//strong[hasclass('o_kanban_record_title')]" position="inside">
+                <t t-if="record.possible_country.raw_value and record.possible_country.raw_value !== 'Unknown'">
+                    <span class="ms-2" t-esc="record.possible_country.raw_value.split(' ').slice(-1)[0]" title="Detected country from phone number"/>
+                </t>
             </xpath>
         </field>
     </record>

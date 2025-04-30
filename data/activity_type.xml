@@ -1,9 +1,11 @@
 <odoo>
-    <record id="mail_activity_type_walkin" model="mail.activity.type">
-        <field name="name">Walkin</field>
-        <field name="res_model_id" ref="crm.model_crm_lead"/>
-        <field name="default_user_id" eval="False"/>
-        <field name="category">default</field>
-        <field name="icon">fa-user</field>
-    </record>
+    <data noupdate="1">
+        <record id="mail_activity_type_walkin" model="mail.activity.type">
+            <field name="name">Walkin</field>
+            <field name="res_model_id" ref="crm.model_crm_lead"/>
+            <field name="icon">fa-user</field>
+            <field name="sequence">10</field>
+            <field name="category">default</field>
+        </record>
+    </data>
 </odoo>

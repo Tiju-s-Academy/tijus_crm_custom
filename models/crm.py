@@ -465,6 +465,41 @@ class CRMLead(models.Model):
         
         return super(CRMLead, self).message_new(msg_dict, custom_values)
 
+    possible_country = fields.Char(
+        string="Possible Country", 
+        compute="_compute_possible_country", 
+        store=True,
+        help="Auto-detected country based on phone number format"
+    )
+    
+    @api.depends('phone')
+    def _compute_possible_country(self):
+        for lead in self:
+            country = "Unknown"
+            flag = ""
+            
+            if lead.phone:
+                phone = lead.phone.strip()
+                
+                # Check for country codes
+                if phone.startswith('+91') or (phone.startswith('91') and len(phone) >= 12):
+                    country = "India"
+                    flag = "🇮🇳"
+                elif phone.startswith('+1') or (phone.startswith('1') and len(phone) >= 11):
+                    country = "USA/Canada"
+                    flag = "🇺🇸"
+                elif phone.startswith('+44') or (phone.startswith('44') and len(phone) >= 11):
+                    country = "United Kingdom"
+                    flag = "🇬🇧"
+                elif phone.startswith('+971') or (phone.startswith('971') and len(phone) >= 12):
+                    country = "UAE"
+                    flag = "🇦🇪"
+                elif phone.startswith('+61') or (phone.startswith('61') and len(phone) >= 11):
+                    country = "Australia"
+                    flag = "🇦🇺"
+                    
+            lead.possible_country = f"{country} {flag}" if country != "Unknown" else country
+
 class CrmLeadChangeRevenueWizard(models.TransientModel):
     _name = 'crm.lead.change.revenue.wizard'
     _description = 'Change Expected Revenue Wizard'
@@ -592,9 +627,10 @@ class CrmLeadCallFollowup(models.Model):
             ('followup_9', 'Followup 9'),
             ('followup_10', 'Followup 10'),
         ],
-        string="Call Status",
-        required=True
+        string="Call Status"
     )
-    remark = fields.Text(string="Remark")
-    date = fields.Datetime(string="Date", default=fields.Datetime.now)
-    user_id = fields.Many2one('res.users', string="User", default=lambda self: self.env.user)
+    call_remark = fields.Text(string="Call Remark")
+
+    call_followup_ids = fields.One2many(
+        'crm.lead.call.followup', 'lead_id', string="Call Followups"
+    )
